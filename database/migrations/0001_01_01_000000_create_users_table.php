@@ -11,14 +11,23 @@ return new class extends Migration
      */
     public function up(): void
     {
+        // 1. AKUN — role: admin, pengguna, pengelola_tps, kurir
         Schema::create('users', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
-            $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
-            $table->rememberToken();
-            $table->timestamps();
+            $table->id('user_id');
+            $table->enum('role', ['admin', 'pengguna', 'pengelola_tps', 'kurir']);
+            $table->string('nama', 100);
+            $table->string('email', 120)->unique();
+            $table->string('no_hp', 20)->unique();
+            $table->string('password_hash', 255);
+            $table->string('foto_url', 255)->nullable();
+            // pengguna: langsung 'aktif'; pengelola_tps & kurir: 'pending' sampai diverifikasi admin
+            $table->enum('status', ['pending', 'aktif', 'nonaktif', 'ditolak'])->default('aktif');
+            $table->dateTime('last_login_at')->nullable();
+            $table->rememberToken(); // tambahan untuk fitur "remember me" Laravel
+            $table->dateTime('created_at')->useCurrent();
+            $table->dateTime('updated_at')->useCurrent()->useCurrentOnUpdate();
+
+            $table->index(['role', 'status'], 'idx_users_role_status');
         });
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {

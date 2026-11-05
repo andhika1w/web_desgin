@@ -25,21 +25,36 @@ class UserFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => fake()->name(),
+            'role' => User::ROLE_PENGGUNA,
+            'nama' => fake()->name(),
             'email' => fake()->unique()->safeEmail(),
-            'email_verified_at' => now(),
-            'password' => static::$password ??= Hash::make('password'),
+            'no_hp' => fake()->unique()->numerify('08##########'),
+            'password_hash' => static::$password ??= Hash::make('password'),
+            'status' => 'aktif',
             'remember_token' => Str::random(10),
         ];
     }
 
-    /**
-     * Indicate that the model's email address should be unverified.
-     */
-    public function unverified(): static
+    public function admin(): static
     {
-        return $this->state(fn (array $attributes) => [
-            'email_verified_at' => null,
-        ]);
+        return $this->state(fn (array $attributes) => ['role' => User::ROLE_ADMIN]);
+    }
+
+    public function pengelolaTps(): static
+    {
+        return $this->state(fn (array $attributes) => ['role' => User::ROLE_PENGELOLA_TPS]);
+    }
+
+    public function kurir(): static
+    {
+        return $this->state(fn (array $attributes) => ['role' => User::ROLE_KURIR]);
+    }
+
+    /**
+     * Akun menunggu verifikasi admin (pengelola_tps & kurir).
+     */
+    public function pending(): static
+    {
+        return $this->state(fn (array $attributes) => ['status' => 'pending']);
     }
 }
