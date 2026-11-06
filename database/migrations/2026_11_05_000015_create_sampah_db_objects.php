@@ -20,6 +20,20 @@ return new class extends Migration
         return in_array(DB::connection()->getDriverName(), ['mysql', 'mariadb'], true);
     }
 
+    private function addCheckConstraint(string $table, string $name, string $check): void
+    {
+        $exists = DB::selectOne('
+            SELECT 1 FROM information_schema.TABLE_CONSTRAINTS
+             WHERE CONSTRAINT_SCHEMA = DATABASE()
+               AND TABLE_NAME = ?
+               AND CONSTRAINT_NAME = ?
+        ', [$table, $name]);
+
+        if (! $exists) {
+            DB::statement("ALTER TABLE `{$table}` ADD CONSTRAINT `{$name}` CHECK ({$check})");
+        }
+    }
+
     public function up(): void
     {
         if (! $this->isMySql()) {
@@ -27,23 +41,17 @@ return new class extends Migration
         }
 
         // -----------------------------------------------------------------
-        // CHECK CONSTRAINT
+        // CHECK CONSTRAINT (idempotent, cek keberadaan dulu)
         // -----------------------------------------------------------------
-        DB::statement('ALTER TABLE tps ADD CONSTRAINT chk_tps_kapasitas
-            CHECK (kapasitas_total_kg > 0 AND kapasitas_terpakai_kg >= 0)');
-        DB::statement('ALTER TABLE tps_jenis_sampah ADD CONSTRAINT chk_tjs
-            CHECK (kapasitas_maks_kg >= 0 AND terpakai_kg >= 0)');
-        DB::statement('ALTER TABLE setoran_detail ADD CONSTRAINT chk_sd_berat
-            CHECK (berat_estimasi_kg > 0 AND (berat_aktual_kg IS NULL OR berat_aktual_kg >= 0))');
-        DB::statement('ALTER TABLE ulasan ADD CONSTRAINT chk_rating
-            CHECK ((rating_kurir IS NULL OR rating_kurir BETWEEN 1 AND 5)
-               AND (rating_tps   IS NULL OR rating_tps   BETWEEN 1 AND 5))');
-        DB::statement('ALTER TABLE transaksi_poin ADD CONSTRAINT chk_poin CHECK (jumlah > 0)');
+        $this->addCheckConstraint('tps', 'chk_tps_kapasitas', 'kapasitas_total_kg > 0 AND kapasitas_terpakai_kg >= 0');
+        $this->addCheckConstraint('tps_jenis_sampah', 'chk_tjs', 'kapasitas_maks_kg >= 0 AND terpakai_kg >= 0');
+        $this->addCheckConstraint('setoran_detail', 'chk_sd_berat', 'berat_estimasi_kg > 0 AND (berat_aktual_kg IS NULL OR berat_aktual_kg >= 0)');
+        $this->addCheckConstraint('ulasan', 'chk_rating', '(rating_kurir IS NULL OR rating_kurir BETWEEN 1 AND 5) AND (rating_tps IS NULL OR rating_tps BETWEEN 1 AND 5)');
+        $this->addCheckConstraint('transaksi_poin', 'chk_poin', 'jumlah > 0');
 
         // -----------------------------------------------------------------
-        // VIEW
+        // VIEW (CREATE OR REPLACE aman jika sudah ada)
         // -----------------------------------------------------------------
-        // Ringkasan kapasitas TPS (dashboard pengelola TPS)
         DB::statement(<<<'SQL'
             CREATE OR REPLACE VIEW v_kapasitas_tps AS
             SELECT t.tps_id, t.nama_tps, t.status,
@@ -53,7 +61,6 @@ return new class extends Migration
             FROM tps t
         SQL);
 
-        // Sampah yang sedang/akan diantar ke TPS (notifikasi pengelola TPS)
         DB::statement(<<<'SQL'
             CREATE OR REPLACE VIEW v_setoran_masuk_tps AS
             SELECT s.setoran_id, s.kode_setoran, s.tps_id, s.metode, s.status, s.estimasi_tiba,
@@ -71,7 +78,6 @@ return new class extends Migration
             GROUP BY s.setoran_id, s.kode_setoran, s.tps_id, s.metode, s.status, s.estimasi_tiba, u.nama, kr.nama
         SQL);
 
-        // Tugas angkut kurir: lokasi jemput + lokasi TPS tujuan
         DB::statement(<<<'SQL'
             CREATE OR REPLACE VIEW v_tugas_angkut AS
             SELECT p.penjemputan_id, p.kurir_id, p.status AS status_penjemputan,
@@ -85,10 +91,9 @@ return new class extends Migration
         SQL);
 
         // -----------------------------------------------------------------
-        // TRIGGER (tanpa DELIMITER — tiap trigger dikirim sebagai satu statement)
+        // TRIGGER (DROP IF EXISTS dulu agar tidak bentrok)
         // -----------------------------------------------------------------
-
-        // Status awal setoran ditentukan dari metode
+        DB::unprepared('DROP TRIGGER IF EXISTS trg_setoran_bi');
         DB::unprepared(<<<'SQL'
             CREATE TRIGGER trg_setoran_bi BEFORE INSERT ON setoran FOR EACH ROW
             BEGIN
@@ -100,7 +105,7 @@ return new class extends Migration
             END
         SQL);
 
-        // Validasi: TPS buka, menerima jenis tsb, berizin (jika medis), dan kapasitas cukup
+        DB::unprepared('DROP TRIGGER IF EXISTS trg_setoran_detail_bi');
         DB::unprepared(<<<'SQL'
             CREATE TRIGGER trg_setoran_detail_bi BEFORE INSERT ON setoran_detail FOR EACH ROW
             BEGIN
@@ -138,7 +143,7 @@ return new class extends Migration
             END
         SQL);
 
-        // Setoran baru: notifikasi ke pengelola TPS (antar sendiri) atau ke semua kurir online (dijemput)
+        DB::unprepared('DROP TRIGGER IF EXISTS trg_setoran_ai');
         DB::unprepared(<<<'SQL'
             CREATE TRIGGER trg_setoran_ai AFTER INSERT ON setoran FOR EACH ROW
             BEGIN
@@ -152,7 +157,6 @@ return new class extends Migration
                        CONCAT('Setoran ', NEW.kode_setoran, ' akan diantar sendiri oleh pengguna ke ', t.nama_tps)
                   FROM tps t WHERE t.tps_id = NEW.tps_id;
               ELSE
-                -- Untuk produksi, filter kurir terdekat di aplikasi (lat_terakhir/lng_terakhir).
                 INSERT INTO notifikasi (penerima_id, setoran_id, tipe, judul, pesan)
                 SELECT k.user_id, NEW.setoran_id, 'tugas_baru',
                        'Tugas angkut baru',
@@ -163,7 +167,7 @@ return new class extends Migration
             END
         SQL);
 
-        // Catat setiap perubahan status setoran
+        DB::unprepared('DROP TRIGGER IF EXISTS trg_setoran_au');
         DB::unprepared(<<<'SQL'
             CREATE TRIGGER trg_setoran_au AFTER UPDATE ON setoran FOR EACH ROW
             BEGIN
@@ -174,10 +178,7 @@ return new class extends Migration
             END
         SQL);
 
-        // Kemajuan penjemputan -> sinkron status setoran + notifikasi
-        // Catatan: agar tidak rebutan, kurir menerima tugas lewat:
-        //   UPDATE penjemputan SET kurir_id=?, status='diterima', diterima_at=NOW()
-        //    WHERE setoran_id=? AND kurir_id IS NULL;   -- cek affected rows = 1
+        DB::unprepared('DROP TRIGGER IF EXISTS trg_penjemputan_au');
         DB::unprepared(<<<'SQL'
             CREATE TRIGGER trg_penjemputan_au AFTER UPDATE ON penjemputan FOR EACH ROW
             BEGIN
@@ -221,8 +222,7 @@ return new class extends Migration
             END
         SQL);
 
-        // Sinkronkan kapasitas TPS saat terpakai_kg per jenis berubah
-        // (termasuk saat TPS mengosongkan sampah secara manual)
+        DB::unprepared('DROP TRIGGER IF EXISTS trg_tjs_au');
         DB::unprepared(<<<'SQL'
             CREATE TRIGGER trg_tjs_au AFTER UPDATE ON tps_jenis_sampah FOR EACH ROW
             BEGIN
@@ -243,11 +243,9 @@ return new class extends Migration
         SQL);
 
         // -----------------------------------------------------------------
-        // STORED PROCEDURE
+        // STORED PROCEDURE (DROP IF EXISTS dulu agar tidak bentrok)
         // -----------------------------------------------------------------
-
-        // Dipanggil pengelola TPS setelah menimbang (berat_aktual_kg sudah diisi semua)
-        // DB::statement('CALL sp_selesaikan_setoran(?)', [$setoranId]);
+        DB::unprepared('DROP PROCEDURE IF EXISTS sp_selesaikan_setoran');
         DB::unprepared(<<<'SQL'
             CREATE PROCEDURE sp_selesaikan_setoran(IN p_setoran_id BIGINT UNSIGNED)
             BEGIN
@@ -309,8 +307,7 @@ return new class extends Migration
             END
         SQL);
 
-        // Rekomendasi TPS terdekat yang buka, terverifikasi, menerima jenis tsb, dan kapasitasnya cukup
-        // DB::select('CALL sp_rekomendasi_tps(?, ?, ?, ?)', [-7.8480, 112.0178, $jenisId, 5.0]);
+        DB::unprepared('DROP PROCEDURE IF EXISTS sp_rekomendasi_tps');
         DB::unprepared(<<<'SQL'
             CREATE PROCEDURE sp_rekomendasi_tps(
               IN p_lat      DECIMAL(10,7),
@@ -354,11 +351,24 @@ return new class extends Migration
         DB::statement('DROP VIEW IF EXISTS v_setoran_masuk_tps');
         DB::statement('DROP VIEW IF EXISTS v_kapasitas_tps');
 
-        DB::statement('ALTER TABLE transaksi_poin DROP CHECK chk_poin');
-        DB::statement('ALTER TABLE ulasan DROP CHECK chk_rating');
-        DB::statement('ALTER TABLE setoran_detail DROP CHECK chk_sd_berat');
-        DB::statement('ALTER TABLE tps_jenis_sampah DROP CHECK chk_tjs');
-        DB::statement('ALTER TABLE tps DROP CHECK chk_tps_kapasitas');
+        // Drop check constraints jika ada
+        foreach ([
+            ['transaksi_poin', 'chk_poin'],
+            ['ulasan', 'chk_rating'],
+            ['setoran_detail', 'chk_sd_berat'],
+            ['tps_jenis_sampah', 'chk_tjs'],
+            ['tps', 'chk_tps_kapasitas'],
+        ] as [$table, $name]) {
+            $exists = DB::selectOne('
+                SELECT 1 FROM information_schema.TABLE_CONSTRAINTS
+                 WHERE CONSTRAINT_SCHEMA = DATABASE()
+                   AND TABLE_NAME = ?
+                   AND CONSTRAINT_NAME = ?
+            ', [$table, $name]);
+
+            if ($exists) {
+                DB::statement("ALTER TABLE `{$table}` DROP CHECK `{$name}`");
+            }
+        }
     }
 };
-

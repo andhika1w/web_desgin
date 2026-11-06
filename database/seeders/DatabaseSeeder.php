@@ -15,13 +15,11 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        $this->call(JenisSampahSeeder::class);
+        $this->call([
+            JenisSampahSeeder::class,
+            AkunSeeder::class, // admin, pengguna, pengelola_tps, kurir
+        ]);
 
         // User::factory(10)->create();
-
-        User::factory()->admin()->create([
-            'nama' => 'Administrator',
-            'email' => 'admin@example.com',
-        ]);
     }
 }
