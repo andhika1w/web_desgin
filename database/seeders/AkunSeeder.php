@@ -6,15 +6,18 @@ use App\Models\AlamatPengguna;
 use App\Models\JenisSampah;
 use App\Models\Konten;
 use App\Models\KurirProfil;
+use App\Models\Penjemputan;
+use App\Models\Setoran;
+use App\Models\SetoranDetail;
 use App\Models\Tps;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 
 /**
- * Akun contoh untuk tiap role + contoh TPS & antrean verifikasi untuk panel Admin.
+ * Akun contoh untuk tiap role + contoh TPS & setoran masuk untuk diuji.
  * Kata sandi semua akun: password
  *
- * Aman dijalankan berulang (updateOrCreate).
+ * Aman dijalankan berulang (updateOrCreate / firstOrCreate).
  */
 class AkunSeeder extends Seeder
 {
@@ -38,7 +41,7 @@ class AkunSeeder extends Seeder
             'no_hp' => '081200000002',
         ]);
 
-        AlamatPengguna::updateOrCreate(
+        $alamatPengguna = AlamatPengguna::updateOrCreate(
             ['user_id' => $pengguna->user_id, 'label' => 'Rumah'],
             [
                 'alamat_lengkap' => 'Jl. Kenanga No. 12, RT 03/RW 05, Kel. Bandar Lor, Kota Kediri',
@@ -48,7 +51,7 @@ class AkunSeeder extends Seeder
             ]
         );
 
-        // ---- 3. Pengelola TPS (Aktif) + TPS Terverifikasi & TPS Menunggu Verifikasi ----
+        // ---- 3. Pengelola TPS 1 (Aktif) -> 1 Akun = 1 TPS (TPS Kenanga Bandar Lor) ----
         $pengelola = $this->akun([
             'role' => User::ROLE_PENGELOLA_TPS,
             'nama' => 'Budi Santoso',
@@ -74,10 +77,18 @@ class AkunSeeder extends Seeder
             ]
         );
 
-        $tps2 = Tps::updateOrCreate(
+        // ---- Pengelola TPS 2 (Contoh TPS Menunggu Verifikasi Admin) ----
+        $pengelola2 = $this->akun([
+            'role' => User::ROLE_PENGELOLA_TPS,
+            'nama' => 'Hendro Wijaya',
+            'email' => 'pengelola2@example.com',
+            'no_hp' => '081200000006',
+        ]);
+
+        Tps::updateOrCreate(
             ['nama_tps' => 'TPS Terpadu Mojoroto'],
             [
-                'pengelola_id' => $pengelola->user_id,
+                'pengelola_id' => $pengelola2->user_id,
                 'alamat' => 'Jl. Veteran No. 88, Kec. Mojoroto, Kota Kediri',
                 'latitude' => -7.8012000,
                 'longitude' => 111.9964000,
@@ -88,12 +99,11 @@ class AkunSeeder extends Seeder
                 'no_izin' => 'IZN-DLHKP/2026/029',
                 'izin_limbah_medis' => true,
                 'status' => 'buka',
-                'is_verified' => false, // Contoh untuk antrean verifikasi admin
+                'is_verified' => false,
             ]
         );
 
-        // Isi kapasitas per jenis sampah untuk TPS Kenanga jika belum ada
-        $jenisNonMedis = JenisSampah::where('kategori', '!=', 'medis')->get();
+        $jenisNonMedis = JenisSampah::where('kategori', '!=', 'medis')->get()->keyBy('nama');
         foreach ($jenisNonMedis as $j) {
             $tps1->jenisSampah()->syncWithoutDetaching([
                 $j->jenis_id => [
@@ -146,7 +156,69 @@ class AkunSeeder extends Seeder
             ]
         );
 
-        // ---- 6. Contoh Konten Edukasi Awal ----
+        // ---- 6. Contoh Setoran Masuk di TPS Kenanga (Siap Ditimbang Pengelola TPS) ----
+        if (! Setoran::where('kode_setoran', 'STR-20261106-0001')->exists() && $jenisNonMedis->isNotEmpty()) {
+            $s1 = Setoran::create([
+                'kode_setoran' => 'STR-20261106-0001',
+                'pengguna_id' => $pengguna->user_id,
+                'tps_id' => $tps1->tps_id,
+                'metode' => 'dijemput',
+                'catatan_pengguna' => 'Sudah dipilah dalam 3 karung terpisah di teras depan.',
+            ]);
+
+            foreach ([
+                'Plastik' => 2.40,
+                'Kertas dan kardus' => 3.10,
+                'Logam' => 0.80,
+            ] as $namaJenis => $estimasiKg) {
+                if (isset($jenisNonMedis[$namaJenis])) {
+                    SetoranDetail::create([
+                        'setoran_id' => $s1->setoran_id,
+                        'jenis_id' => $jenisNonMedis[$namaJenis]->jenis_id,
+                        'berat_estimasi_kg' => $estimasiKg,
+                    ]);
+                }
+            }
+
+            Penjemputan::create([
+                'setoran_id' => $s1->setoran_id,
+                'alamat_id' => $alamatPengguna->alamat_id,
+                'kurir_id' => $kurir->user_id,
+                'jadwal_jemput' => now()->subHour(),
+                'status' => 'tiba_di_tps',
+                'diterima_at' => now()->subMinutes(50),
+                'diangkut_at' => now()->subMinutes(30),
+                'tiba_at' => now()->subMinutes(5),
+            ]);
+
+            $s1->update(['status' => 'tiba_di_tps']);
+        }
+
+        if (! Setoran::where('kode_setoran', 'STR-20261106-0002')->exists() && $jenisNonMedis->isNotEmpty()) {
+            $s2 = Setoran::create([
+                'kode_setoran' => 'STR-20261106-0002',
+                'pengguna_id' => $pengguna->user_id,
+                'tps_id' => $tps1->tps_id,
+                'metode' => 'antar_sendiri',
+                'estimasi_tiba' => now()->addMinutes(25),
+                'catatan_pengguna' => 'Botol kaca dikemas dalam kardus tebal.',
+            ]);
+
+            foreach ([
+                'Kaca' => 4.50,
+                'Elektronik bekas' => 1.20,
+            ] as $namaJenis => $estimasiKg) {
+                if (isset($jenisNonMedis[$namaJenis])) {
+                    SetoranDetail::create([
+                        'setoran_id' => $s2->setoran_id,
+                        'jenis_id' => $jenisNonMedis[$namaJenis]->jenis_id,
+                        'berat_estimasi_kg' => $estimasiKg,
+                    ]);
+                }
+            }
+        }
+
+        // ---- 7. Contoh Konten Edukasi Awal ----
         Konten::updateOrCreate(
             ['slug' => 'panduan-memilah-sampah-b3-dan-medis-rumah-tangga'],
             [

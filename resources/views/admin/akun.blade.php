@@ -95,12 +95,12 @@
                                         · Status: {{ $u->kurirProfil->status_ketersediaan }}
                                     </div>
                                 @elseif ($u->role === 'pengelola_tps')
-                                    @if ($u->tpsDikelola->isNotEmpty())
+                                    @if ($u->tpsDikelola)
                                         <div class="font-medium text-stone-800">
-                                            {{ $u->tpsDikelola->pluck('nama_tps')->join(', ') }}
+                                            {{ $u->tpsDikelola->nama_tps }}
                                         </div>
                                     @else
-                                        <span class="text-stone-400">Belum terhubung ke TPS</span>
+                                        <span class="text-stone-400">Belum mendaftarkan TPS</span>
                                     @endif
                                 @else
                                     <span class="text-stone-400">—</span>

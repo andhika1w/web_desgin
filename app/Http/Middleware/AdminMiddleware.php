@@ -11,7 +11,7 @@ class AdminMiddleware
     public function handle(Request $request, Closure $next): Response
     {
         if (! $request->user() || ! $request->user()->isAdmin()) {
-            abort(403, 'Halaman ini khusus untuk Administrator.');
+            abort(403, 'lo siapa, khusus untuk yang penting penting saja.');
         }
 
         return $next($request);

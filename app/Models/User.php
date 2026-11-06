@@ -119,10 +119,15 @@ class User extends Authenticatable
         return $this->hasOne(KurirProfil::class, 'user_id', 'user_id');
     }
 
-    /** TPS yang dikelola (role pengelola_tps). */
-    public function tpsDikelola(): HasMany
+    /** TPS yang dikelola (1 akun pengelola_tps = 1 TPS). */
+    public function tps(): HasOne
     {
-        return $this->hasMany(Tps::class, 'pengelola_id', 'user_id');
+        return $this->hasOne(Tps::class, 'pengelola_id', 'user_id');
+    }
+
+    public function tpsDikelola(): HasOne
+    {
+        return $this->hasOne(Tps::class, 'pengelola_id', 'user_id');
     }
 
     /** Setoran yang dibuat (role pengguna). */

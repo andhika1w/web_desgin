@@ -405,38 +405,57 @@ form:has(input[name="role"][value="pengelola_tps"]:checked) .catatan-verifikasi 
 /* ---------------------------------------------------------------- panel nota (tanda khas) */
 
 .akun__nota {
+    position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
     padding: var(--s6) var(--s4);
-    background: var(--hijau-tong);
-    color: var(--putih);
+    background-color: #FFFFFF;
+    background-image: url('../images/auth-bg.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    color: var(--aspal);
+    border-top: 1px solid var(--garis-tipis);
+}
+
+@media (min-width: 960px) {
+    .akun__nota {
+        border-top: 0;
+        border-left: 1px solid var(--garis-tipis);
+    }
 }
 
 @media (max-width: 959px) {
     .akun__nota { padding: var(--s6) var(--s4) var(--s7); }
 }
 
-.nota-wrap { width: 100%; max-width: 21rem; }
+.nota-wrap {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 21rem;
+}
 
 .nota-wrap__judul {
     margin: 0 0 var(--s4);
     font-family: var(--font-judul);
     font-weight: 700;
-    font-stretch: 85%;
     font-size: 1.25rem;
-    line-height: 1.25;
+    line-height: 1.3;
+    color: #133A26;
 }
 
 .nota {
     position: relative;
     padding: var(--s5) var(--s4) var(--s5);
-    background: var(--kertas-nota);
+    background: #FFFFFF;
     color: var(--aspal);
     font-size: var(--teks-kecil);
     font-variant-numeric: tabular-nums;
+    border: 1px solid #DCE3DC;
     border-radius: var(--radius-panel);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    box-shadow: 0 12px 30px rgba(19, 58, 38, 0.12);
 }
 
 .nota__kepala {
@@ -490,10 +509,10 @@ form:has(input[name="role"][value="pengelola_tps"]:checked) .catatan-verifikasi 
 .nota-wrap__ket {
     margin: var(--s5) 0 0;
     font-size: var(--teks-kecil);
-    color: #D6E6DC;
+    color: var(--aspal-2);
 }
 
-.nota-wrap__ket strong { color: var(--putih); }
+.nota-wrap__ket strong { color: #133A26; }
 
 /* ---------------------------------------------------------------- dashboard sederhana */
 

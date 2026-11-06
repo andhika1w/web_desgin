@@ -58,6 +58,10 @@ class LoginController extends Controller
             return redirect()->intended(route('admin.dashboard'));
         }
 
+        if ($user->isPengelolaTps()) {
+            return redirect()->intended(route('pengelola.dashboard'));
+        }
+
         return redirect()->intended(route('dashboard'));
     }
 

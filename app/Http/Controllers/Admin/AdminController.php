@@ -163,6 +163,7 @@ class AdminController extends Controller
 
         $pengelolaTps = User::where('role', User::ROLE_PENGELOLA_TPS)
             ->where('status', 'aktif')
+            ->whereDoesntHave('tps')
             ->orderBy('nama')
             ->get();
 
@@ -174,7 +175,7 @@ class AdminController extends Controller
     public function storeTps(Request $request): RedirectResponse
     {
         $data = $request->validate([
-            'pengelola_id' => ['required', 'exists:users,user_id'],
+            'pengelola_id' => ['required', 'exists:users,user_id', 'unique:tps,pengelola_id'],
             'nama_tps' => ['required', 'string', 'max:120'],
             'alamat' => ['required', 'string', 'max:255'],
             'latitude' => ['required', 'numeric', 'between:-90,90'],
@@ -184,6 +185,8 @@ class AdminController extends Controller
             'jam_tutup' => ['nullable', 'date_format:H:i'],
             'no_izin' => ['nullable', 'string', 'max:100'],
             'izin_limbah_medis' => ['nullable', 'boolean'],
+        ], [
+            'pengelola_id.unique' => 'Akun pengelola ini sudah mengelola 1 TPS (1 akun hanya untuk 1 TPS).',
         ]);
 
         $tps = Tps::create([

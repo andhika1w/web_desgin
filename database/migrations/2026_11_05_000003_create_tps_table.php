@@ -11,8 +11,8 @@ return new class extends Migration
         // 2. TPS & JENIS SAMPAH
         Schema::create('tps', function (Blueprint $table) {
             $table->id('tps_id');
-            // users.role = 'pengelola_tps' (validasi di aplikasi)
-            $table->foreignId('pengelola_id')
+            // users.role = 'pengelola_tps' (1 akun pengelola = 1 TPS)
+            $table->foreignId('pengelola_id')->unique('uq_tps_pengelola')
                 ->constrained('users', 'user_id', 'fk_tps_pengelola');
             $table->string('nama_tps', 120);
             $table->string('alamat', 255);
