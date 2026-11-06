@@ -54,6 +54,10 @@ class LoginController extends Controller
 
         $user->forceFill(['last_login_at' => now()])->save();
 
+        if ($user->isAdmin()) {
+            return redirect()->intended(route('admin.dashboard'));
+        }
+
         return redirect()->intended(route('dashboard'));
     }
 
