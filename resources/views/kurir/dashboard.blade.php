@@ -1,8 +1,8 @@
 @extends('layouts.kurir')
 
-@section('title', 'Meja Tugas & Antrean Penjemputan')
-@section('heading', 'Pos Penjemputan Kurir')
-@section('subheading', 'Ambil pesanan penjemputan sampah warga, muat sampah, dan antarkan ke TPS tujuan.')
+@section('title', 'Manifes & Tugas Penjemputan Medis/B3')
+@section('heading', 'Pos Kurir Pengangkutan Limbah Medis & B3')
+@section('subheading', 'Ambil manifes penjemputan, pastikan kemasan Safety Box / Biohazard tersegel aman, dan serahkan ke fasilitas berizin.')
 
 @section('content')
 

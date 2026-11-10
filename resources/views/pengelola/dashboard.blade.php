@@ -1,8 +1,8 @@
 @extends('layouts.pengelola')
 
-@section('title', 'Meja Timbang & Setoran Masuk')
-@section('heading', $tps ? 'Meja Timbang · '.$tps->nama_tps : 'Pos Pengelola TPS')
-@section('subheading', $tps ? $tps->alamat : 'Daftarkan lokasi TPS Anda untuk mulai menerima setoran warga.')
+@section('title', 'Meja Timbang & Manifes Masuk')
+@section('heading', $tps ? 'Meja Timbang Manifes · '.$tps->nama_tps : 'Pos Pengelola Fasilitas Medis & B3')
+@section('subheading', $tps ? $tps->alamat.($tps->izin_limbah_medis ? ' · Berizin Resmi Limbah Medis & B3' : ' · Fasilitas Limbah B3 & Daur Ulang') : 'Daftarkan fasilitas penampungan Anda untuk mulai menerima manifes limbah.')
 
 @section('content')
 
@@ -86,8 +86,8 @@
             <section class="lg:col-span-2 space-y-4">
                 <div class="flex items-center justify-between">
                     <div>
-                        <h2 class="text-base font-bold text-[#1F2421]">Antrean Setoran Masuk & Meja Timbang</h2>
-                        <p class="text-xs text-stone-500">Isi berat aktual (kg) hasil timbangan untuk menghitung poin warga secara otomatis.</p>
+                        <h2 class="text-base font-bold text-[#1F2421]">Antrean Manifes Masuk &amp; Meja Timbang Limbah Medis / B3</h2>
+                        <p class="text-xs text-stone-500">Periksa keutuhan segel kemasan K3 (Safety Box / Kantong Biohazard), lalu isi berat aktual (kg) hasil timbangan.</p>
                     </div>
                 </div>
 
@@ -194,7 +194,7 @@
                                                         <div class="inline-flex items-center justify-end gap-1.5">
                                                             <input type="number"
                                                                    name="berat_aktual[{{ $d->detail_id }}]"
-                                                                   step="0.05"
+                                                                   step="0.01"
                                                                    min="0.01"
                                                                    max="99999"
                                                                    required

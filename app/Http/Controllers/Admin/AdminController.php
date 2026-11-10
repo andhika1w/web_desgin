@@ -385,6 +385,61 @@ class AdminController extends Controller
         return back()->with('sukses', "Status konten '{$konten->judul}' diubah menjadi {$konten->status}.");
     }
 
+    public function updateKonten(Request $request, Konten $konten): RedirectResponse
+    {
+        $data = $request->validate([
+            'judul' => ['required', 'string', 'max:200'],
+            'jenis' => ['required', Rule::in(['artikel', 'edukasi', 'pengumuman', 'banner'])],
+            'ringkasan' => ['nullable', 'string', 'max:300'],
+            'isi' => ['required', 'string'],
+            'status' => ['required', Rule::in(['draft', 'terbit', 'arsip'])],
+        ]);
+
+        $slug = $konten->slug;
+        if ($data['judul'] !== $konten->judul) {
+            $slugDasar = Str::slug($data['judul']);
+            $slug = $slugDasar;
+            $i = 2;
+            while (Konten::where('slug', $slug)->where('konten_id', '!=', $konten->konten_id)->exists()) {
+                $slug = $slugDasar.'-'.$i++;
+            }
+        }
+
+        $terbit = $data['status'] === 'terbit';
+
+        $konten->update([
+            'judul' => $data['judul'],
+            'slug' => $slug,
+            'jenis' => $data['jenis'],
+            'ringkasan' => $data['ringkasan'] ?: Str::limit(strip_tags($data['isi']), 160),
+            'isi' => $data['isi'],
+            'status' => $data['status'],
+            'published_at' => $terbit ? ($konten->published_at ?? now()) : $konten->published_at,
+        ]);
+
+        $this->catatLog($request, 'ubah_konten', 'konten', $konten->konten_id, [
+            'judul' => $konten->judul,
+            'jenis' => $konten->jenis,
+            'status' => $konten->status,
+        ]);
+
+        return back()->with('sukses', "Konten '{$konten->judul}' berhasil diperbarui.");
+    }
+
+    public function destroyKonten(Request $request, Konten $konten): RedirectResponse
+    {
+        $judul = $konten->judul;
+        $idKonten = $konten->konten_id;
+
+        $konten->delete();
+
+        $this->catatLog($request, 'hapus_konten', 'konten', $idKonten, [
+            'judul' => $judul,
+        ]);
+
+        return back()->with('sukses', "Konten '{$judul}' berhasil dihapus.");
+    }
+
     private function catatLog(Request $request, string $aksi, string $tabel, int $idTarget, array $detail = []): void
     {
         LogAktivitasAdmin::create([

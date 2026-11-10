@@ -1,8 +1,8 @@
 @extends('layouts.admin')
 
-@section('title', 'Jenis Sampah & Poin')
-@section('heading', 'Master Jenis Sampah & Poin')
-@section('subheading', 'Atur nilai poin per kilogram dan ketentuan penanganan khusus tiap kategori sampah.')
+@section('title', 'Klasifikasi Limbah Medis, B3 & Poin')
+@section('heading', 'Master Klasifikasi Limbah Medis, B3 & Poin')
+@section('subheading', 'Atur protokol penanganan khusus (Medis Infeksius, Benda Tajam, Farmasi, B3) dan tarif poin insentif per kilogram.')
 
 @section('content')
 
@@ -99,14 +99,10 @@
                 </div>
 
                 <div>
-                    <label for="kategori" class="block text-xs font-semibold text-stone-700 mb-1">Kategori</label>
+                    <label for="kategori" class="block text-xs font-semibold text-stone-700 mb-1">Kategori Limbah</label>
                     <select id="kategori" name="kategori" required
                             class="w-full px-3 py-2 rounded-lg border border-stone-300 bg-white text-sm">
-                        <option value="organik" @selected(old('kategori') === 'organik')>Organik</option>
-                        <option value="anorganik" @selected(old('kategori') === 'anorganik')>Anorganik</option>
-                        <option value="elektronik" @selected(old('kategori') === 'elektronik')>Elektronik</option>
-                        <option value="b3" @selected(old('kategori') === 'b3')>B3 (Bahan Berbahaya & Beracun)</option>
-                        <option value="medis" @selected(old('kategori') === 'medis')>Medis (Khusus TPS Berizin)</option>
+                        <option value="medis" selected>Medis (Khusus Fasilitas Berizin)</option>
                     </select>
                 </div>
 

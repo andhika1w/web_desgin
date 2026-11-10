@@ -5,9 +5,9 @@
 @php
     $peranTerpilih = old('role', 'pengguna');
     $daftarPeran = [
-        'pengguna' => ['Pengguna', 'Setor sampah dari rumah dan kumpulkan poin. Akun langsung aktif.'],
-        'pengelola_tps' => ['Pengelola TPS', 'Terima dan timbang setoran di TPS Anda.'],
-        'kurir' => ['Kurir', 'Jemput sampah pengguna dan antar ke TPS.'],
+        'pengguna' => ['Penghasil / Pengguna', 'Salurkan sampah medis (infeksius, benda tajam, obat) & limbah B3 ke fasilitas berizin. Akun langsung aktif.'],
+        'pengelola_tps' => ['Pengelola Fasilitas / TPS', 'Kelola 1 fasilitas penampungan berizin medis/B3 & timbang manifes masuk.'],
+        'kurir' => ['Kurir Angkut Medis & B3', 'Jemput kemasan limbah medis/B3 bersegel dan serahkan ke fasilitas tujuan.'],
     ];
 @endphp
 
@@ -44,7 +44,7 @@
                 </fieldset>
 
                 <p class="catatan-verifikasi" role="note">
-                    Akun pengelola TPS dan kurir aktif setelah diverifikasi admin. Anda akan bisa masuk begitu disetujui.
+                    Akun pengelola fasilitas/TPS dan kurir angkut B3 aktif setelah izinnya diverifikasi admin. Anda akan bisa masuk begitu disetujui.
                 </p>
 
                 <div class="isian">
@@ -161,8 +161,8 @@
     </section>
 
     @include('auth.partials.nota', [
-        'judul' => 'Pilah di rumah, setor ke TPS terdekat, poin dihitung dari berat timbangan.',
-        'keterangan' => 'Plastik 20 poin/kg, kertas dan kardus 15 poin/kg, logam 30 poin/kg. <strong>Nota di atas hanya contoh.</strong>',
+        'judul' => 'Kemas limbah medis & B3 sesuai standar K3, salurkan ke fasilitas berizin terdekat.',
+        'keterangan' => 'Limbah medis wajib melalui fasilitas berizin resmi. Limbah B3 & elektronik mendapatkan poin insentif per kg. <strong>Manifes di atas hanya contoh.</strong>',
     ])
 </main>
 @endsection

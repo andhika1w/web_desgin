@@ -412,7 +412,8 @@ form:has(input[name="role"][value="pengelola_tps"]:checked) .catatan-verifikasi 
     padding: var(--s6) var(--s4);
     background-color: #FFFFFF;
     background-image: url('../images/auth-bg.png');
-    background-size: cover;
+    /* contain: ilustrasi tampil utuh (tidak terpotong di sisi kiri/kanan) */
+    background-size: contain;
     background-position: center;
     background-repeat: no-repeat;
     color: var(--aspal);
@@ -421,20 +422,30 @@ form:has(input[name="role"][value="pengelola_tps"]:checked) .catatan-verifikasi 
 
 @media (min-width: 960px) {
     .akun__nota {
+        padding: var(--s7) var(--s6);
         border-top: 0;
         border-left: 1px solid var(--garis-tipis);
     }
 }
 
 @media (max-width: 959px) {
-    .akun__nota { padding: var(--s6) var(--s4) var(--s7); }
+    .akun__nota {
+        padding: var(--s6) var(--s4) var(--s7);
+        background-size: cover;
+    }
 }
 
+/* Panel isi diberi latar putih agar teks tidak tertimpa ilustrasi */
 .nota-wrap {
     position: relative;
     z-index: 1;
     width: 100%;
-    max-width: 21rem;
+    max-width: 22rem;
+    padding: var(--s5);
+    background: rgba(255, 255, 255, 0.94);
+    border: 1px solid #E2E8E3;
+    border-radius: 18px;
+    box-shadow: 0 16px 40px rgba(19, 58, 38, 0.10);
 }
 
 .nota-wrap__judul {
@@ -454,8 +465,7 @@ form:has(input[name="role"][value="pengelola_tps"]:checked) .catatan-verifikasi 
     font-size: var(--teks-kecil);
     font-variant-numeric: tabular-nums;
     border: 1px solid #DCE3DC;
-    border-radius: var(--radius-panel);
-    box-shadow: 0 12px 30px rgba(19, 58, 38, 0.12);
+    border-radius: 12px;
 }
 
 .nota__kepala {

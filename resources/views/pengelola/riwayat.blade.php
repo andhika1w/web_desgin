@@ -1,8 +1,8 @@
 @extends('layouts.pengelola')
 
-@section('title', 'Riwayat Setoran & Ulasan')
-@section('heading', $tps ? 'Riwayat & Ulasan · '.$tps->nama_tps : 'Riwayat Setoran')
-@section('subheading', 'Daftar transaksi setoran yang telah ditimbang beserta ulasan warga.')
+@section('title', 'Riwayat Manifes & Ulasan')
+@section('heading', $tps ? 'Riwayat Manifes · '.$tps->nama_tps : 'Riwayat Manifes Setoran')
+@section('subheading', 'Daftar manifes limbah medis, B3, dan daur ulang yang telah ditimbang beserta ulasan layanan.')
 
 @section('header_actions')
     @if ($rataRatingTps !== null)

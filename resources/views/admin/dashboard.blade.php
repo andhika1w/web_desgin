@@ -1,8 +1,8 @@
 @extends('layouts.admin')
 
-@section('title', 'Ikhtisar & Verifikasi')
-@section('heading', 'Ikhtisar & Antrean Verifikasi')
-@section('subheading', 'Verifikasi pendaftar pengelola TPS & kurir, pantau kapasitas TPS, dan periksa alur setoran.')
+@section('title', 'Ikhtisar & Verifikasi Izin Medis/B3')
+@section('heading', 'Pengawasan Limbah Medis, B3 & Verifikasi Izin')
+@section('subheading', 'Verifikasi izin fasilitas penampungan medis/B3 & kurir khusus, pantau daya tampung, dan awasi manifes setoran.')
 
 @section('content')
 

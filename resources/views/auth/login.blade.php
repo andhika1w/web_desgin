@@ -50,14 +50,14 @@
             </form>
 
             <p class="alih">
-                Belum punya akun? <a href="{{ route('register') }}">Daftar sebagai pengguna, pengelola TPS, atau kurir</a>
+                Belum punya akun? <a href="{{ route('register') }}">Daftar sebagai penghasil/pengguna, pengelola fasilitas berizin, atau kurir B3</a>
             </p>
         </div>
     </section>
 
     @include('auth.partials.nota', [
-        'judul' => 'Setiap setoran ditimbang di TPS, lalu poinnya masuk ke akun Anda.',
-        'keterangan' => 'Riwayat setoran, status penjemputan, dan saldo poin bisa dilihat setelah masuk. <strong>Nota di atas hanya contoh.</strong>',
+        'judul' => 'Setiap manifes limbah medis & B3 ditimbang resmi di fasilitas berizin.',
+        'keterangan' => 'Riwayat manifes pemusnahan medis, status penjemputan kurir, dan poin insentif B3 dapat dipantau setelah masuk. <strong>Manifes di atas hanya contoh.</strong>',
     ])
 </main>
 @endsection
