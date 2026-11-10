@@ -53,9 +53,9 @@
                 <div class="text-xs text-stone-500">Total Limbah Tersalurkan</div>
                 <div class="mt-1 flex items-baseline gap-1.5">
                     <span class="text-2xl font-bold angka-tabular text-[#1F2421]">
-                        {{ number_format($ringkasan['total_berat_kg'], 2, ',', '.') }}
+                        {{ number_format($ringkasan['total_berat_kg'], 0, ',', '.') }}
                     </span>
-                    <span class="text-xs font-semibold text-stone-500">kg</span>
+                    <span class="text-xs font-semibold text-stone-500">item</span>
                 </div>
             </div>
 
@@ -231,14 +231,14 @@
                             {{-- Daftar Rincian Item Limbah --}}
                             <div>
                                 <div class="text-xs font-semibold text-stone-600 mb-2 flex items-center justify-between angka-tabular">
-                                    <span>Rincian Muatan Manifes:</span>
-                                    <span>Total Estimasi: <strong>{{ number_format($totalEstKg, 2, ',', '.') }} kg</strong> · Est. Poin B3: <strong class="text-[#1D6B45]">+{{ $estimasiPoin }} pts</strong></span>
+                                    <span>Rincian Item Manifes:</span>
+                                    <span>Total Estimasi: <strong>{{ number_format($totalEstKg, 0, ',', '.') }} item</strong> · Est. Poin B3: <strong class="text-[#1D6B45]">+{{ $estimasiPoin }} pts</strong></span>
                                 </div>
                                 <div class="flex flex-wrap gap-2">
                                     @foreach ($s->detail as $d)
                                         <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md border {{ $d->jenisSampah?->kategori === 'medis' ? 'border-[#F2B8B5] bg-[#FFFBFB] text-[#B3261E]' : 'border-stone-200 bg-stone-50 text-stone-800' }} text-xs angka-tabular">
                                             <span class="font-semibold">{{ $d->jenisSampah?->nama }}</span>
-                                            <span>({{ number_format($d->berat_estimasi_kg, 2, ',', '.') }} kg)</span>
+                                            <span>({{ number_format($d->berat_estimasi_kg, 0, ',', '.') }} item)</span>
                                         </span>
                                     @endforeach
                                 </div>
@@ -293,7 +293,7 @@
                                     <th class="py-2.5 px-4">Kode &amp; Tanggal</th>
                                     <th class="py-2.5 px-4">Fasilitas Tujuan</th>
                                     <th class="py-2.5 px-4">Status</th>
-                                    <th class="py-2.5 px-4 text-right">Berat Aktual / Poin</th>
+                                    <th class="py-2.5 px-4 text-right">Jumlah Item / Poin</th>
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-stone-200 text-xs">
@@ -314,10 +314,10 @@
                                         </td>
                                         <td class="py-3 px-4 text-right angka-tabular">
                                             @if ($st->total_berat_aktual_kg !== null)
-                                                <div class="font-bold text-[#1F2421]">{{ number_format($st->total_berat_aktual_kg, 2, ',', '.') }} kg</div>
+                                                <div class="font-bold text-[#1F2421]">{{ number_format($st->total_berat_aktual_kg, 0, ',', '.') }} item</div>
                                                 <div class="font-semibold text-[#1D6B45]">+{{ $st->total_poin }} pts</div>
                                             @else
-                                                <span class="text-stone-400">Est. {{ number_format($st->detail->sum('berat_estimasi_kg'), 2, ',', '.') }} kg</span>
+                                                <span class="text-stone-400">Est. {{ number_format($st->detail->sum('berat_estimasi_kg'), 0, ',', '.') }} item</span>
                                             @endif
                                         </td>
                                     </tr>

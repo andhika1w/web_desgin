@@ -77,15 +77,15 @@
                     </div>
                 @endif
 
-                {{-- Tabel Rincian Berat Estimasi vs Aktual --}}
+                {{-- Tabel Rincian Jumlah Item Estimasi vs Aktual --}}
                 <div class="border border-stone-200 rounded-lg overflow-hidden">
                     <table class="w-full text-left border-collapse text-xs">
                         <thead>
                             <tr class="bg-stone-50 border-b border-stone-200 font-semibold text-stone-600">
                                 <th class="py-2 px-3">Jenis Limbah / Sampah</th>
                                 <th class="py-2 px-3">Kategori</th>
-                                <th class="py-2 px-3 text-right">Berat Estimasi</th>
-                                <th class="py-2 px-3 text-right">Berat Aktual Timbangan</th>
+                                <th class="py-2 px-3 text-right">Jumlah Estimasi</th>
+                                <th class="py-2 px-3 text-right">Jumlah Aktual Diterima</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-stone-200 angka-tabular">
@@ -93,12 +93,12 @@
                                 <tr>
                                     <td class="py-2 px-3 font-semibold text-[#1F2421]">{{ $d->jenisSampah?->nama ?? '-' }}</td>
                                     <td class="py-2 px-3 uppercase text-stone-500">{{ $d->jenisSampah?->kategori }}</td>
-                                    <td class="py-2 px-3 text-right text-stone-600">{{ number_format($d->berat_estimasi_kg, 2, ',', '.') }} kg</td>
+                                    <td class="py-2 px-3 text-right text-stone-600">{{ number_format($d->berat_estimasi_kg, 0, ',', '.') }} item</td>
                                     <td class="py-2 px-3 text-right font-bold text-[#1F2421]">
                                         @if ($d->berat_aktual_kg !== null)
-                                            {{ number_format($d->berat_aktual_kg, 2, ',', '.') }} kg
+                                            {{ number_format($d->berat_aktual_kg, 0, ',', '.') }} item
                                         @else
-                                            <span class="text-stone-400 font-normal">Belum ditimbang</span>
+                                            <span class="text-stone-400 font-normal">Belum diverifikasi</span>
                                         @endif
                                     </td>
                                 </tr>
@@ -107,8 +107,8 @@
                         @if ($s->total_berat_aktual_kg !== null)
                             <tfoot>
                                 <tr class="bg-emerald-50/50 border-t border-stone-200 font-bold angka-tabular">
-                                    <td colspan="2" class="py-2 px-3 text-[#1F2421]">Total Ditimbang &amp; Poin Terbit</td>
-                                    <td class="py-2 px-3 text-right text-[#1F2421]">{{ number_format($s->total_berat_aktual_kg, 2, ',', '.') }} kg</td>
+                                    <td colspan="2" class="py-2 px-3 text-[#1F2421]">Total Item Diterima &amp; Poin Terbit</td>
+                                    <td class="py-2 px-3 text-right text-[#1F2421]">{{ number_format($s->total_berat_aktual_kg, 0, ',', '.') }} item</td>
                                     <td class="py-2 px-3 text-right text-[#1D6B45]">+{{ $s->total_poin }} poin</td>
                                 </tr>
                             </tfoot>

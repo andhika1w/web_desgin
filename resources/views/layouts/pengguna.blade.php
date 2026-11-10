@@ -82,7 +82,7 @@
             ],
             [
                 'route' => 'pengguna.poin',
-                'label' => 'Dompet Poin & Tukar K3',
+                'label' => 'Dompet & Tukar Poin',
                 'badge' => 0,
                 'icon' => '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>',
             ],
@@ -97,17 +97,18 @@
 
     {{-- Sidebar Portal Penghasil / Pengguna (Susunan Atas ke Bawah pada Mobile & Desktop) --}}
     <aside class="w-full lg:w-64 lg:min-h-dvh bg-[#133A26] text-white flex flex-col shrink-0 border-b lg:border-b-0 lg:border-r border-[#0e2c1d]">
-        <div class="px-5 py-4 flex items-center justify-between border-b border-white/10">
-            <a href="{{ route('pengguna.dashboard') }}" class="inline-flex items-center gap-2.5 font-judul font-bold text-base tracking-tight text-white">
-                <svg class="w-6 h-6 shrink-0" viewBox="0 0 26 26" aria-hidden="true">
-                    <rect x="2" y="2" width="22" height="22" rx="6" fill="#F2C230"/>
-                    <path d="M13 6.5v13M6.5 13h13" stroke="#133A26" stroke-width="2.8" stroke-linecap="round"/>
+        <div class="px-5 py-4 flex items-center justify-between gap-2 border-b border-white/10">
+            <a href="{{ route('pengguna.dashboard') }}" class="inline-flex items-center gap-2.5 font-judul font-bold text-base tracking-tight text-white min-w-0">
+                <svg class="w-7 h-7 shrink-0" viewBox="0 0 36 36" aria-hidden="true">
+                    <rect x="0" y="0" width="36" height="36" rx="8" fill="#F2C230"/>
+                    <path d="M18 9L28 26H8L18 9Z" stroke="#133A26" stroke-width="2.4" stroke-linejoin="round" fill="none"/>
+                    <path d="M18 15.5V19.5M18 22.5H18.01" stroke="#133A26" stroke-width="2.4" stroke-linecap="round"/>
                 </svg>
-                <span>Medis &amp; Limbah B3</span>
+                <span class="truncate">Medis &amp; B3</span>
             </a>
 
-            <div class="flex items-center gap-2">
-                <span class="px-2 py-0.5 text-[11px] font-bold rounded bg-[#F2C230] text-[#1F2421]">WARGA</span>
+            <div class="flex items-center gap-2 shrink-0">
+                <span class="px-2 py-0.5 text-xs font-bold rounded bg-[#F2C230] text-[#1F2421]">WARGA</span>
                 {{-- Tombol Buka/Tutup Menu di Mobile (Tetap tersusun dari atas ke bawah) --}}
                 <button type="button"
                         onclick="toggleMenuMobilePengguna()"

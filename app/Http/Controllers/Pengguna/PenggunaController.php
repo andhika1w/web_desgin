@@ -137,17 +137,21 @@ class PenggunaController extends Controller
             'tps_id'              => ['required', 'exists:tps,tps_id'],
             'metode'              => ['required', 'in:dijemput,antar_sendiri'],
             'alamat_id'           => ['nullable', 'required_if:metode,dijemput', 'exists:alamat_pengguna,alamat_id'],
-            'jadwal_waktu'        => ['nullable', 'date'],
+            'jadwal_waktu'        => ['nullable', 'date', 'after_or_equal:' . now()->subMinutes(5)->format('Y-m-d H:i:s')],
             'catatan_pengguna'    => ['nullable', 'string', 'max:255'],
+            'pernyataan_sop'      => ['required', 'accepted'],
             'berat_estimasi'      => ['required', 'array'],
             'berat_estimasi.*'    => ['nullable', 'numeric', 'min:0', 'max:1000'],
             'catatan_item'        => ['nullable', 'array'],
             'catatan_item.*'      => ['nullable', 'string', 'max:200'],
         ], [
-            'alamat_id.required_if' => 'Pilih alamat titik penjemputan terlebih dahulu untuk metode Dijemput Kurir.',
+            'alamat_id.required_if'   => 'Pilih alamat titik penjemputan terlebih dahulu untuk metode Dijemput Kurir.',
+            'jadwal_waktu.after_or_equal' => 'Waktu penjemputan/kedatangan tidak boleh di waktu yang sudah lewat.',
+            'pernyataan_sop.required' => 'Anda wajib menyetujui pernyataan standar kemasan SOP K3 sebelum menerbitkan manifes.',
+            'pernyataan_sop.accepted' => 'Anda wajib menyetujui pernyataan standar kemasan SOP K3 sebelum menerbitkan manifes.',
         ]);
 
-        // Ambil hanya item dengan berat > 0
+        // Ambil hanya item dengan jumlah > 0
         $itemTerpilih = collect($validated['berat_estimasi'])
             ->map(fn ($val) => (float) $val)
             ->filter(fn ($berat) => $berat > 0);
@@ -155,7 +159,7 @@ class PenggunaController extends Controller
         if ($itemTerpilih->isEmpty()) {
             return back()
                 ->withInput()
-                ->with('galat', 'Isi perkiraan berat (minimal 0,1 kg) pada setidaknya satu jenis limbah medis, B3, atau sampah terpilah.');
+                ->with('galat', 'Isi jumlah (minimal 1 item) pada setidaknya satu jenis limbah medis atau B3 yang diserahkan.');
         }
 
         $tps = Tps::findOrFail($validated['tps_id']);
@@ -163,6 +167,19 @@ class PenggunaController extends Controller
             return back()
                 ->withInput()
                 ->with('galat', 'Fasilitas tujuan sedang tutup atau belum terverifikasi.');
+        }
+
+        $sisaKuotaKg = max(0.0, (float) $tps->kapasitas_total_kg - (float) $tps->kapasitas_terpakai_kg);
+        $totalBeratEstimasi = (float) $itemTerpilih->sum();
+        if ($totalBeratEstimasi > $sisaKuotaKg) {
+            return back()
+                ->withInput()
+                ->with('galat', sprintf(
+                    'Total jumlah item (%s item) melebihi sisa kuota daya tampung %s (%s item). Kurangi jumlah item atau pilih fasilitas lain.',
+                    number_format($totalBeratEstimasi, 0, ',', '.'),
+                    $tps->nama_tps,
+                    number_format($sisaKuotaKg, 0, ',', '.')
+                ));
         }
 
         // Cek apakah ada kategori medis tetapi TPS belum berizin medis

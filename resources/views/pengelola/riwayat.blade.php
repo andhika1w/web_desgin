@@ -67,7 +67,7 @@
                                     @foreach ($s->detail as $d)
                                         <div>
                                             {{ $d->jenisSampah?->nama }}:
-                                            <strong>{{ number_format($d->berat_aktual_kg ?? $d->berat_estimasi_kg, 2, ',', '.') }} kg</strong>
+                                            <strong>{{ number_format($d->berat_aktual_kg ?? $d->berat_estimasi_kg, 0, ',', '.') }} item</strong>
                                         </div>
                                     @endforeach
                                 </td>
@@ -88,7 +88,7 @@
                                 </td>
                                 <td class="py-3.5 px-4 text-right angka-tabular text-xs">
                                     @if ($s->total_berat_aktual_kg !== null)
-                                        <div class="font-bold text-[#1F2421]">{{ number_format($s->total_berat_aktual_kg, 2, ',', '.') }} kg</div>
+                                        <div class="font-bold text-[#1F2421]">{{ number_format($s->total_berat_aktual_kg, 0, ',', '.') }} item</div>
                                         <div class="font-semibold text-[#1D6B45]">+{{ $s->total_poin }} pts</div>
                                     @else
                                         <span class="text-stone-400">—</span>
