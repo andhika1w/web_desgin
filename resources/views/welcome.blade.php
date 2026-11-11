@@ -321,12 +321,21 @@
             </nav>
 
             <div class="flex items-center gap-2">
-                <a href="{{ route('login') }}" class="hidden sm:inline-flex items-center px-3.5 py-2 rounded-xl text-sm font-semibold text-[#1F2421] hover:bg-[#E4EAE5] transition-colors">
-                    Masuk
-                </a>
-                <a href="{{ route('register') }}" class="inline-flex items-center px-4 py-2.5 rounded-xl bg-[#1D6B45] hover:bg-[#155235] text-white text-sm font-semibold transition-colors">
-                    <span class="sm:hidden">Daftar</span><span class="hidden sm:inline">Daftar Akun</span>
-                </a>
+                @auth
+                    <a href="{{ route('dashboard') }}" class="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-[#1D6B45] hover:bg-[#155235] text-white text-sm font-semibold transition-colors">
+                        <span>Dashboard</span>
+                        <svg class="w-4 h-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                            <path fill-rule="evenodd" d="M3 10a.75.75 0 0 1 .75-.75h10.638L10.23 5.29a.75.75 0 1 1 1.04-1.08l5.5 5.25a.75.75 0 0 1 0 1.08l-5.5 5.25a.75.75 0 1 1-1.04-1.08l4.158-3.96H3.75A.75.75 0 0 1 3 10Z" clip-rule="evenodd"/>
+                        </svg>
+                    </a>
+                @else
+                    <a href="{{ route('login') }}" class="hidden sm:inline-flex items-center px-3.5 py-2 rounded-xl text-sm font-semibold text-[#1F2421] hover:bg-[#E4EAE5] transition-colors">
+                        Masuk
+                    </a>
+                    <a href="{{ route('register') }}" class="inline-flex items-center px-4 py-2.5 rounded-xl bg-[#1D6B45] hover:bg-[#155235] text-white text-sm font-semibold transition-colors">
+                        <span class="sm:hidden">Daftar</span><span class="hidden sm:inline">Daftar Akun</span>
+                    </a>
+                @endauth
 
                 {{-- Tombol hamburger (mobile) --}}
                 <button type="button" id="tombol-menu"
@@ -349,7 +358,9 @@
                 @if($kontenEdukasi->isNotEmpty())
                     <li><a href="#edukasi" class="block py-3 border-b border-[#E2E8E4]">Panduan K3</a></li>
                 @endif
-                <li class="sm:hidden"><a href="{{ route('login') }}" class="block py-3 font-semibold text-[#1D6B45]">Masuk ke akun</a></li>
+                @guest
+                    <li class="sm:hidden"><a href="{{ route('login') }}" class="block py-3 font-semibold text-[#1D6B45]">Masuk ke akun</a></li>
+                @endguest
             </ul>
         </nav>
     </header>
@@ -376,15 +387,24 @@
                         </p>
 
                         <div class="flex flex-wrap items-center gap-3 pt-1">
-                            <a href="{{ route('login') }}" class="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl bg-[#1D6B45] hover:bg-[#155235] text-white font-semibold text-base shadow-sm transition-colors">
-                                <span>Masuk ke Dashboard</span>
-                                <svg class="w-4 h-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                                    <path fill-rule="evenodd" d="M3 10a.75.75 0 0 1 .75-.75h10.638L10.23 5.29a.75.75 0 1 1 1.04-1.08l5.5 5.25a.75.75 0 0 1 0 1.08l-5.5 5.25a.75.75 0 1 1-1.04-1.08l4.158-3.96H3.75A.75.75 0 0 1 3 10Z" clip-rule="evenodd"/>
-                                </svg>
-                            </a>
-                            <a href="{{ route('register') }}" class="inline-flex items-center gap-2 px-5 py-3.5 rounded-xl bg-white hover:bg-[#E4EAE5] text-[#1F2421] border border-[#C6D1C9] font-semibold text-base transition-colors">
-                                Daftar Akun Baru
-                            </a>
+                            @auth
+                                <a href="{{ route('dashboard') }}" class="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl bg-[#1D6B45] hover:bg-[#155235] text-white font-semibold text-base shadow-sm transition-colors">
+                                    <span>Buka Dashboard</span>
+                                    <svg class="w-4 h-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                        <path fill-rule="evenodd" d="M3 10a.75.75 0 0 1 .75-.75h10.638L10.23 5.29a.75.75 0 1 1 1.04-1.08l5.5 5.25a.75.75 0 0 1 0 1.08l-5.5 5.25a.75.75 0 1 1-1.04-1.08l4.158-3.96H3.75A.75.75 0 0 1 3 10Z" clip-rule="evenodd"/>
+                                    </svg>
+                                </a>
+                            @else
+                                <a href="{{ route('login') }}" class="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl bg-[#1D6B45] hover:bg-[#155235] text-white font-semibold text-base shadow-sm transition-colors">
+                                    <span>Masuk ke Dashboard</span>
+                                    <svg class="w-4 h-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                        <path fill-rule="evenodd" d="M3 10a.75.75 0 0 1 .75-.75h10.638L10.23 5.29a.75.75 0 1 1 1.04-1.08l5.5 5.25a.75.75 0 0 1 0 1.08l-5.5 5.25a.75.75 0 1 1-1.04-1.08l4.158-3.96H3.75A.75.75 0 0 1 3 10Z" clip-rule="evenodd"/>
+                                    </svg>
+                                </a>
+                                <a href="{{ route('register') }}" class="inline-flex items-center gap-2 px-5 py-3.5 rounded-xl bg-white hover:bg-[#E4EAE5] text-[#1F2421] border border-[#C6D1C9] font-semibold text-base transition-colors">
+                                    Daftar Akun Baru
+                                </a>
+                            @endauth
                             <a href="{{ route('game.pilah') }}" class="inline-flex items-center gap-2 px-5 py-3.5 rounded-xl text-[#1D6B45] hover:bg-[#E4EAE5] border border-[#A9D4BB] font-semibold text-base transition-colors">
                                 Coba Game Pilah
                             </a>
@@ -1102,12 +1122,21 @@
                         </p>
                     </div>
                     <div class="lg:col-span-5 flex flex-wrap lg:justify-end gap-3">
-                        <a href="{{ route('register') }}" class="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl bg-[#F2C230] hover:bg-[#E0B020] text-[#1F2421] font-display font-bold text-base transition-colors">
-                            Daftar Akun Baru
-                        </a>
-                        <a href="{{ route('login') }}" class="inline-flex items-center gap-2 px-5 py-3.5 rounded-xl bg-white/10 hover:bg-white/20 text-white border border-white/25 font-semibold text-base transition-colors">
-                            Masuk ke Akun
-                        </a>
+                        @auth
+                            <a href="{{ route('dashboard') }}" class="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl bg-[#F2C230] hover:bg-[#E0B020] text-[#1F2421] font-display font-bold text-base transition-colors">
+                                <span>Buka Dashboard</span>
+                                <svg class="w-4 h-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                    <path fill-rule="evenodd" d="M3 10a.75.75 0 0 1 .75-.75h10.638L10.23 5.29a.75.75 0 1 1 1.04-1.08l5.5 5.25a.75.75 0 0 1 0 1.08l-5.5 5.25a.75.75 0 1 1-1.04-1.08l4.158-3.96H3.75A.75.75 0 0 1 3 10Z" clip-rule="evenodd"/>
+                                </svg>
+                            </a>
+                        @else
+                            <a href="{{ route('register') }}" class="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl bg-[#F2C230] hover:bg-[#E0B020] text-[#1F2421] font-display font-bold text-base transition-colors">
+                                Daftar Akun Baru
+                            </a>
+                            <a href="{{ route('login') }}" class="inline-flex items-center gap-2 px-5 py-3.5 rounded-xl bg-white/10 hover:bg-white/20 text-white border border-white/25 font-semibold text-base transition-colors">
+                                Masuk ke Akun
+                            </a>
+                        @endauth
                     </div>
                 </div>
             </div>
