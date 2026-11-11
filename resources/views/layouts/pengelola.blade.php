@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>@yield('title', 'Pos Fasilitas Medis & B3') · Medis &amp; Limbah B3</title>
+    <title>@yield('title', 'Pos Fasilitas Medis & B3') · Kemedcar</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -90,11 +90,7 @@
     <aside class="w-full lg:w-64 lg:min-h-dvh bg-[#16442D] text-white flex flex-col shrink-0 border-b lg:border-b-0 lg:border-r border-[#0f3120]">
         <div class="px-5 py-4 flex items-center justify-between border-b border-white/10">
             <a href="{{ route('pengelola.dashboard') }}" class="inline-flex items-center gap-2.5 font-judul font-bold text-base tracking-tight text-white">
-                <svg class="w-6 h-6 shrink-0" viewBox="0 0 26 26" aria-hidden="true">
-                    <rect x="2" y="2" width="22" height="22" rx="6" fill="#F2C230"/>
-                    <path d="M13 6.5v13M6.5 13h13" stroke="#16442D" stroke-width="2.8" stroke-linecap="round"/>
-                </svg>
-                <span>Fasilitas Medis/B3</span>
+                <img src="{{ asset('images/logo-kemadwast.png') }}" alt="KemaDwast" class="h-7 w-auto max-w-[140px] shrink-0 rounded bg-white px-1.5 py-1 object-contain">
             </a>
             <span class="px-2 py-0.5 text-xs font-bold rounded bg-[#F2C230] text-[#1F2421]">POS</span>
         </div>
@@ -205,4 +201,3 @@
 
 </body>
 </html>
-

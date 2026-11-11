@@ -17,7 +17,11 @@
 @section('content')
     <div class="bg-white border border-stone-200 rounded-xl p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
-            <h2 class="font-judul font-bold text-base text-[#1F2421]">Portal Penghasil / Pengguna Limbah Medis &amp; B3</h2>
+            <h2 class="flex flex-wrap items-center gap-x-2 font-judul font-bold text-base text-[#1F2421]">
+                <span>Portal</span>
+                <img src="{{ asset('images/logo-kemadwast.png') }}" alt="KemaDwast" class="w-24 h-auto">
+                <span>· Limbah Medis &amp; B3</span>
+            </h2>
             <p class="text-xs sm:text-sm text-stone-600 mt-1">
                 Gunakan menu navigasi di samping (atau di atas pada tampilan HP) untuk membuat manifes setoran, melihat riwayat timbangan, menukar poin K3, atau mengatur titik jemput.
             </p>

@@ -112,6 +112,8 @@ Route::post('/masuk', [LoginController::class, 'store'])->middleware('throttle:6
 Route::get('/daftar', [RegisterController::class, 'create'])->name('register');
 Route::post('/daftar', [RegisterController::class, 'store'])->middleware('throttle:6,1');
 
+Route::view('/misi-pilah', 'game')->name('game.pilah');
+
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', function () {
         $user = auth()->user();

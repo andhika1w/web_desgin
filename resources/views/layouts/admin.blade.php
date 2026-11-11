@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>@yield('title', 'Panel Regulator Admin') · Medis &amp; Limbah B3</title>
+    <title>@yield('title', 'Panel Regulator Admin') · Kemedcar</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -93,12 +93,7 @@
     <aside class="w-full lg:w-64 lg:min-h-dvh bg-[#133A26] text-white flex flex-col shrink-0 border-b lg:border-b-0 lg:border-r border-[#0e2c1d]">
         <div class="px-5 py-4 flex items-center justify-between gap-2 border-b border-white/10">
             <a href="{{ route('admin.dashboard') }}" class="inline-flex items-center gap-2.5 font-judul font-bold text-base tracking-tight text-white min-w-0">
-                <svg class="w-7 h-7 shrink-0" viewBox="0 0 36 36" aria-hidden="true">
-                    <rect x="0" y="0" width="36" height="36" rx="8" fill="#F2C230"/>
-                    <path d="M18 9L28 26H8L18 9Z" stroke="#133A26" stroke-width="2.4" stroke-linejoin="round" fill="none"/>
-                    <path d="M18 15.5V19.5M18 22.5H18.01" stroke="#133A26" stroke-width="2.4" stroke-linecap="round"/>
-                </svg>
-                <span class="truncate">Medis &amp; B3</span>
+                <img src="{{ asset('images/logo-kemadwast.png') }}" alt="KemaDwast" class="h-7 w-auto max-w-[140px] shrink-0 rounded bg-white px-1.5 py-1 object-contain">
             </a>
             <span class="px-2 py-0.5 text-xs font-bold rounded bg-[#F2C230] text-[#1F2421] shrink-0">ADMIN</span>
         </div>
@@ -187,4 +182,3 @@
 
 </body>
 </html>
-

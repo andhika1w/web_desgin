@@ -108,30 +108,11 @@ a:hover { color: var(--hijau-tong-gelap); }
     text-decoration: none;
 }
 
-.merek svg {
-    width: 36px;
-    height: 36px;
-    flex: none;
-}
-
-.merek__teks {
-    display: flex;
-    flex-direction: column;
-    line-height: 1.15;
-}
-
-.merek__utama {
-    font-family: var(--font-judul);
-    font-weight: 800;
-    font-size: 1.0625rem;
-    color: var(--aspal);
-    letter-spacing: -0.01em;
-}
-
-.merek__sub {
-    font-size: 0.75rem;
-    font-weight: 600;
-    color: var(--hijau-tong);
+.merek__logo {
+    display: block;
+    width: 190px;
+    max-width: 100%;
+    height: auto;
 }
 
 .akun__isi {

@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="theme-color" content="#133A26">
-    <title>Pengelolaan Sampah Medis &amp; Limbah B3 — Penanganan Berizin, Manifes Timbangan &amp; Poin Lingkungan</title>
+    <title>Kemedcar — Pengelolaan Medis &amp; Limbah B3</title>
     <meta name="description" content="Sistem pengelolaan sampah medis (infeksius, benda tajam, farmasi, patologis) dan limbah B3 (Bahan Berbahaya dan Beracun) terintegrasi dengan fasilitas penampungan berizin resmi.">
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23133A26'/%3E%3Cpath d='M32 18 14 48h36L32 18Z' fill='none' stroke='%23F2C230' stroke-width='5' stroke-linejoin='round'/%3E%3Cpath d='M32 29v8' stroke='%23F2C230' stroke-width='5' stroke-linecap='round'/%3E%3C/svg%3E">
 
@@ -304,16 +304,8 @@
     {{-- Navigasi Utama --}}
     <header class="sticky top-0 z-40 bg-[#F3F5F2]/95 backdrop-blur-md border-b border-[#D6DDD7]">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-3">
-            <a href="{{ url('/') }}" class="inline-flex items-center gap-2.5 text-[#1F2421] font-display font-bold text-lg rounded-xl py-1">
-                <span class="w-9 h-9 rounded-xl bg-[#133A26] text-[#F2C230] flex items-center justify-center shrink-0">
-                    <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v4m0 4h.01M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0Z"/>
-                    </svg>
-                </span>
-                <span class="leading-tight">
-                    <span class="block tracking-tight">Medis &amp; Limbah B3</span>
-                    <span class="hidden sm:block font-sans font-normal text-xs text-[#4A554E]">Sistem Pengelolaan &amp; Manifes Berizin</span>
-                </span>
+            <a href="{{ url('/') }}" class="inline-flex items-center text-[#1F2421] rounded-xl py-1">
+                <img src="{{ asset('images/logo-kemadwast.png') }}" alt="KemaDwast" class="w-32 sm:w-44 md:w-48 h-auto">
             </a>
 
             {{-- Menu desktop --}}
@@ -322,6 +314,7 @@
                 <a href="#katalog-limbah" class="hover:text-[#1D6B45] transition-colors py-1">Jenis Limbah</a>
                 <a href="#fasilitas-berizin" class="hover:text-[#1D6B45] transition-colors py-1">Fasilitas Berizin</a>
                 <a href="#data-nasional" class="hover:text-[#1D6B45] transition-colors py-1">Data Nasional</a>
+                <a href="{{ route('game.pilah') }}" class="hover:text-[#1D6B45] transition-colors py-1">Game Pilah</a>
                 @if($kontenEdukasi->isNotEmpty())
                     <a href="#edukasi" class="hover:text-[#1D6B45] transition-colors py-1">Panduan K3</a>
                 @endif
@@ -352,6 +345,7 @@
                 <li><a href="#katalog-limbah" class="block py-3 border-b border-[#E2E8E4]">Jenis Limbah</a></li>
                 <li><a href="#fasilitas-berizin" class="block py-3 border-b border-[#E2E8E4]">Fasilitas Berizin</a></li>
                 <li><a href="#data-nasional" class="block py-3 border-b border-[#E2E8E4]">Data Nasional</a></li>
+                <li><a href="{{ route('game.pilah') }}" class="block py-3 border-b border-[#E2E8E4]">Game Pilah Sampah</a></li>
                 @if($kontenEdukasi->isNotEmpty())
                     <li><a href="#edukasi" class="block py-3 border-b border-[#E2E8E4]">Panduan K3</a></li>
                 @endif
@@ -390,6 +384,9 @@
                             </a>
                             <a href="{{ route('register') }}" class="inline-flex items-center gap-2 px-5 py-3.5 rounded-xl bg-white hover:bg-[#E4EAE5] text-[#1F2421] border border-[#C6D1C9] font-semibold text-base transition-colors">
                                 Daftar Akun Baru
+                            </a>
+                            <a href="{{ route('game.pilah') }}" class="inline-flex items-center gap-2 px-5 py-3.5 rounded-xl text-[#1D6B45] hover:bg-[#E4EAE5] border border-[#A9D4BB] font-semibold text-base transition-colors">
+                                Coba Game Pilah
                             </a>
                         </div>
                     </div>
@@ -1120,9 +1117,8 @@
     {{-- Footer --}}
     <footer class="on-dark bg-[#1F2421] text-[#D5DBD7] py-10 text-sm border-t border-white/10">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-            <div class="flex items-center gap-2.5">
-                <span class="w-8 h-8 rounded-lg bg-[#B3261E] text-white flex items-center justify-center font-display font-bold text-xs" aria-hidden="true">B3</span>
-                <span class="font-display font-bold text-white">Pengelolaan Sampah Medis &amp; Limbah B3</span>
+            <div class="flex items-center">
+                <img src="{{ asset('images/logo-kemadwast.png') }}" alt="KemaDwast" class="w-36 sm:w-44 h-auto rounded bg-white px-2 py-1">
             </div>
             <nav aria-label="Tautan footer" class="flex flex-wrap items-center gap-x-5 gap-y-2">
                 <a href="#standar-kemasan" class="hover:text-white transition-colors">SOP Kemasan</a>
@@ -1348,7 +1344,7 @@
                 const bawah = buatEl('div', 'mt-auto');
                 if (d.tanggal) bawah.appendChild(buatEl('time', 'sampul-tanggal block mb-1', 'Diterbitkan: ' + d.tanggal));
                 bawah.appendChild(buatEl('div', 'sampul-garis'));
-                bawah.appendChild(buatEl('p', 'sampul-merek', 'Pengelolaan Sampah Medis & Limbah B3'));
+                bawah.appendChild(buatEl('p', 'sampul-merek', 'Kemedcar'));
                 dalam.appendChild(bawah);
 
                 halaman.appendChild(dalam);
