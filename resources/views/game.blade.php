@@ -50,7 +50,7 @@
 <body class="min-h-screen flex flex-col antialiased">
     <header class="bg-[#133A26] text-white">
         <div class="max-w-6xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between gap-4">
-            <a href="{{ url('/') }}" class="inline-flex items-center rounded-xl">
+            <a href="{{ auth()->check() ? route('dashboard') : route('welcome') }}" class="inline-flex items-center rounded-xl">
                 <img src="{{ asset('images/logo-kemadwast.png') }}" alt="KemaDwast" class="w-36 sm:w-44 h-auto rounded bg-white px-2 py-1">
             </a>
             @auth
@@ -63,9 +63,9 @@
 
     <main class="misi-bg flex-1">
         <div class="max-w-5xl mx-auto px-4 sm:px-6 py-10 sm:py-14">
-            <a href="{{ url('/') }}" class="inline-flex items-center gap-2 text-sm font-semibold text-[#1D6B45] hover:underline mb-7">
+            <a href="{{ auth()->check() ? route('dashboard') : route('welcome') }}" class="inline-flex items-center gap-2 text-sm font-semibold text-[#1D6B45] hover:underline mb-7">
                 <svg class="w-4 h-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M17 10a.75.75 0 0 1-.75.75H5.56l3.72 3.72a.75.75 0 1 1-1.06 1.06l-5-5a.75.75 0 0 1 0-1.06l5-5a.75.75 0 1 1 1.06 1.06l-3.72 3.72h10.69A.75.75 0 0 1 17 10Z" clip-rule="evenodd"/></svg>
-                Kembali ke beranda
+                {{ auth()->check() ? 'Kembali ke dashboard' : 'Kembali ke beranda' }}
             </a>
 
             <section class="grid lg:grid-cols-[.8fr_1.2fr] gap-8 lg:gap-12 items-center mb-9">
@@ -163,7 +163,9 @@
     <footer class="bg-white border-t border-[#D6DDD7]">
         <div class="max-w-6xl mx-auto px-4 sm:px-6 py-5 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-[#535E57]">
             <img src="{{ asset('images/logo-kemadwast.png') }}" alt="KemaDwast" class="w-32 h-auto">
-            <a href="{{ url('/') }}" class="font-semibold text-[#1D6B45] hover:underline">Kembali ke beranda</a>
+            <a href="{{ auth()->check() ? route('dashboard') : route('welcome') }}" class="font-semibold text-[#1D6B45] hover:underline">
+                {{ auth()->check() ? 'Kembali ke dashboard' : 'Kembali ke beranda' }}
+            </a>
         </div>
     </footer>
 
