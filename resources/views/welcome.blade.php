@@ -356,7 +356,7 @@
 
     <main id="konten-utama" class="flex-1">
         {{-- HERO --}}
-        <section class="relative overflow-hidden border-b border-[#D6DDD7] bg-gradient-to-b from-[#EBF0EC] to-[#F3F5F2] py-10 sm:py-14 lg:py-16">
+        <section class="relative overflow-hidden border-b border-[#D6DDD7] bg-[#F3F5F2] py-10 sm:py-14 lg:py-16" style="background-image: linear-gradient(rgba(243, 245, 242, 0.52), rgba(243, 245, 242, 0.52)), url('{{ asset('images/background-kemen.png') }}'); background-position: center; background-size: cover;">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
                     <div class="lg:col-span-7 space-y-6">
@@ -571,7 +571,7 @@
                 'organik'    => ['bg' => 'bg-[#F1F5E6]', 'text' => 'text-[#3F5E14]', 'label' => 'Organik terpilah'],
             ];
         @endphp
-        <section id="katalog-limbah" class="scroll-mt-20 py-14 sm:py-16 border-b border-[#D6DDD7] bg-white">
+        <section id="katalog-limbah" class="scroll-mt-20 py-14 sm:py-16 border-b border-[#D6DDD7] bg-white" style="background-image: linear-gradient(rgba(255, 255, 255, 0.52), rgba(255, 255, 255, 0.52)), url('{{ asset('images/background-jenis-limbah.png') }}'); background-position: center; background-size: cover;">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
                     <div>
@@ -962,7 +962,7 @@
                 })->values();
             @endphp
 
-            <section id="edukasi" class="scroll-mt-20 py-14 sm:py-16 bg-white border-b border-[#D6DDD7]">
+            <section id="edukasi" class="scroll-mt-20 py-14 sm:py-16 bg-white border-b border-[#D6DDD7]" style="background-image: linear-gradient(rgba(255, 255, 255, 0.52), rgba(255, 255, 255, 0.52)), url('{{ asset('images/background-pengelolaan-limbah.png') }}'); background-position: center; background-size: cover;">
                 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div class="mb-8">
                         <span class="text-xs font-bold uppercase tracking-wider text-[#B3261E] block mb-1">Protokol K3 &amp; sosialisasi</span>
